@@ -1,14 +1,74 @@
-#include "complex.h"
-#include "stats.h"
-
 #include <stdio.h>
+#include <math.h>
 
 /*
  * Question 2.
- * Appendix 1: real parts and imaginary parts of 100 complex numbers.
- * The nth complex number uses the nth real part and the nth imaginary part.
- * Values are copied from the lab handout.
+ * 100 complex numbers from Appendix 1.
+ * Number n uses real_parts[n] and imag_parts[n].
  */
+
+typedef struct {
+    double real;
+    double imag;
+} complex;
+
+double magnitude(complex z)
+{
+    return sqrt(z.real * z.real + z.imag * z.imag);
+}
+
+double average_magnitude(complex z[], int n)
+{
+    double sum = 0.0;
+    int i;
+
+    for (i = 0; i < n; i++) {
+        sum += magnitude(z[i]);
+    }
+    return sum / n;
+}
+
+double minimum_magnitude(complex z[], int n)
+{
+    double min_mag = magnitude(z[0]);
+    int i;
+
+    for (i = 1; i < n; i++) {
+        double mag = magnitude(z[i]);
+        if (mag < min_mag) {
+            min_mag = mag;
+        }
+    }
+    return min_mag;
+}
+
+double maximum_magnitude(complex z[], int n)
+{
+    double max_mag = magnitude(z[0]);
+    int i;
+
+    for (i = 1; i < n; i++) {
+        double mag = magnitude(z[i]);
+        if (mag > max_mag) {
+            max_mag = mag;
+        }
+    }
+    return max_mag;
+}
+
+/* Population variance: average of (|z| - mean)^2. */
+double variance_magnitude(complex z[], int n)
+{
+    double mean = average_magnitude(z, n);
+    double sum_sq = 0.0;
+    int i;
+
+    for (i = 0; i < n; i++) {
+        double delta = magnitude(z[i]) - mean;
+        sum_sq += delta * delta;
+    }
+    return sum_sq / n;
+}
 
 #define N 100
 
